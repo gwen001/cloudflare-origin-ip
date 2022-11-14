@@ -4,11 +4,17 @@ Try to find the origin IP of a website protected by Cloudflare.
 
 ## Install
 
-```
-$ python3 cloudflare-origin-ip.py <url>
+```bash
+git clone https://github.com/gwen001/cloudflare-origin-ip
+cd cloudflare-origin-ip
+pip3 install -r requirements.txt
 ```
 
 ## Usage
+
+```bash
+$ python3 cloudflare-origin-ip.py <url>
+```
 
 ```
 usage: cloudflare-origin-ip.py [-h] [-u URL] [-s SOURCE]
