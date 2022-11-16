@@ -40,3 +40,7 @@ cloudflare-origin-ip.py -u https://xxx.xxxxxxxxxxxx.xxx -s censys,crtsh,/home/lo
 
 <img src="https://raw.githubusercontent.com/gwen001/cloudflare-origin-ip/main/preview.png" />
 
+---
+
+Feel free to [open an issue](/../../issues/) if you have any problem with the script.  
+
