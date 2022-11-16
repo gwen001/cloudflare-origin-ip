@@ -1,12 +1,20 @@
+<h1 align="center">cloudflare-origin-ip</h1>
+
+<h4 align="center">Try to find the origin IP of a webapp protected by Cloudflare.</h4>
+
 <p align="left">
     <img src="https://img.shields.io/badge/python-v3-blue" alt="python badge">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT license badge">
     <a href="https://twitter.com/intent/tweet?text=https%3a%2f%2fgithub.com%2fgwen001%2fcloudflare-origin-ip%2f" target="_blank"><img src="https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fgwen001%2Fcloudflare-origin-ip" alt="twitter badge"></a>
 </p>
 
-# cloudflare-origin-ip
+<p align="center">
+    <img src="https://img.shields.io/github/stars/gwen001/cloudflare-origin-ip?style=social" alt="github stars badge">
+    <img src="https://img.shields.io/github/watchers/gwen001/cloudflare-origin-ip?style=social" alt="github watchers badge">
+    <img src="https://img.shields.io/github/forks/gwen001/cloudflare-origin-ip?style=social" alt="github forks badge">
+</p>
 
-Try to find the origin IP of a webapp protected by Cloudflare.
+---
 
 ## Install
 
@@ -37,6 +45,8 @@ cloudflare-origin-ip.py -u https://xxx.xxxxxxxxxxxx.xxx -s censys,crtsh (default
 cloudflare-origin-ip.py -u https://xxx.xxxxxxxxxxxx.xxx -s /home/local/ips.txt
 cloudflare-origin-ip.py -u https://xxx.xxxxxxxxxxxx.xxx -s censys,crtsh,/home/local/ips.txt,/home/local/subdomains.txt
 ```
+
+---
 
 <img src="https://raw.githubusercontent.com/gwen001/cloudflare-origin-ip/main/preview.png" />
 
