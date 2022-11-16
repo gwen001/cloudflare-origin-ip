@@ -6,7 +6,7 @@
 
 # cloudflare-origin-ip
 
-Try to find the origin IP of a website protected by Cloudflare.
+Try to find the origin IP of a webapp protected by Cloudflare.
 
 ## Install
 
