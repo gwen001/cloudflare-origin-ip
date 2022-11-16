@@ -1,10 +1,16 @@
+<p align="left">
+    <img src="https://img.shields.io/badge/python-v3-blue" alt="python badge">
+    <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT license badge">
+    <a href="https://twitter.com/intent/tweet?text=https%3a%2f%2fgithub.com%2fgwen001%2fcloudflare-origin-ip%2f" target="_blank"><img src="https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fgwen001%2Fcloudflare-origin-ip" alt="twitter badge"></a>
+</p>
+
 # cloudflare-origin-ip
 
 Try to find the origin IP of a website protected by Cloudflare.
 
 ## Install
 
-```bash
+```
 git clone https://github.com/gwen001/cloudflare-origin-ip
 cd cloudflare-origin-ip
 pip3 install -r requirements.txt
@@ -12,7 +18,7 @@ pip3 install -r requirements.txt
 
 ## Usage
 
-```bash
+```
 $ python3 cloudflare-origin-ip.py <url>
 ```
 
@@ -33,3 +39,4 @@ cloudflare-origin-ip.py -u https://xxx.xxxxxxxxxxxx.xxx -s censys,crtsh,/home/lo
 ```
 
 <img src="https://raw.githubusercontent.com/gwen001/cloudflare-origin-ip/main/preview.png" />
+
