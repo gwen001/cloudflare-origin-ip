@@ -196,7 +196,7 @@ def grabIPfromCensys( domain ):
     headers = {"Content-Type":"application/json"}
     try:
         ex = 0
-        r = requests.get( CENSYS_API_URL+'/v2/hosts/search?q=deciplus.pro', headers=headers, auth=(CENSYS_UID,CENSYS_SECRET) )
+        r = requests.get( CENSYS_API_URL+'/v2/hosts/search?q='+domain, headers=headers, auth=(CENSYS_UID,CENSYS_SECRET) )
     except Exception as e:
         ex = 1
         print( colored("[-] error occurred: %s" % e, 'red') )
