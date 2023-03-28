@@ -16,6 +16,15 @@
 
 ---
 
+## Description
+
+This Python tool compares the HTTP response of the given subdomain to HTTP responses of a list of IPs addresses. This list is based on:
+- subdomains supplied by the user
+- subdomains found on external sources
+- IPs found external sources
+
+Then, a score of similarity is calculated for each response using the Levenshtein algorithm.
+
 ## Install
 
 ```

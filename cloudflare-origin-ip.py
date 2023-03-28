@@ -236,7 +236,14 @@ def readIPfromFile( domain, ipsrc ):
 #             return 1
 #     return 0
 
-def is_cloudflare2( ip ):
+# def is_cloudflare2( ip ):
+#     ip = IP2Int( str(ip) )
+#     for r in r_cloudflare2:
+#         if ip >= r[0] and ip <= r[1]:
+#             return 1
+#     return 0
+
+def is_cloudflare3( ip ):
     ip = IP2Int( str(ip) )
     for r in r_cloudflare2:
         if ip >= r[0] and ip <= r[1]:
@@ -303,7 +310,7 @@ def testBypass3( t_multiproc, r_reference, host, ip ):
     sys.stdout.write( 'progress: %d/%d\r' %  (t_multiproc['n_current'],t_multiproc['n_total']) )
     t_multiproc['n_current'] = t_multiproc['n_current'] + 1
 
-    if is_cloudflare2( IPAddress(ip) ):
+    if is_cloudflare3( IPAddress(ip) ):
         sys.stdout.write( colored("%s" % ip, 'yellow') )
         sys.stdout.write( " is CloudFlare\n" )
         return
@@ -446,6 +453,8 @@ pool.close()
 pool.join()
 
 exit()
+exit()
+exit()
 
 
 ###################################### VERSION 2 ######################################
@@ -466,7 +475,7 @@ exit()
 print( "[+] Checking Cloudflare... (cpu killer)" )
 
 for ip in set(t_ips):
-    if is_cloudflare2( IPAddress(ip) ):
+    if is_cloudflare( IPAddress(ip) ):
         t_ips_cloudflare.append( ip )
         print( colored("%s" % ip, 'white') )
     else:
