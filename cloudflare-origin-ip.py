@@ -563,6 +563,8 @@ except Exception as e:
     print( colored("[-] error occured: %s" % e, 'red') )
     exit()
 
+# print(r_reference.content)
+# exit()
 print( colored("Status=%d, Length=%d, Headers=%d, Content-Type=%s" % (r_reference.status_code,len(r_reference.content),len(r_reference.headers),r_reference.headers['Content-Type']), 'cyan') )
 print( "[+] Testing bypass..." )
 
