@@ -137,20 +137,24 @@ if 'censys' in t_sources:
         CENSYS_UID = os.environ['CENSYS_UID']
         CENSYS_SECRET = os.environ['CENSYS_SECRET']
     except Exception as e:
-        print( "Error: %s not defined" % e )
-        print( "To fix this:" )
-        print( "export CENSYS_UID=xxxxxxxxxxxxxxxxxxxxxxxxxx" )
-        print( "export CENSYS_SECRET=xxxxxxxxxxxxxxxxxxxxxxx" )
-        exit()
+        t_sources.remove('censys')
+        print( colored("[-] error occured: CENSYS_UID or CENSYS_SECRET not found, Censys removed from sources", 'red') )
+        # print( "Error: %s not defined" % e )
+        # print( "To fix this:" )
+        # print( "export CENSYS_UID=xxxxxxxxxxxxxxxxxxxxxxxxxx" )
+        # print( "export CENSYS_SECRET=xxxxxxxxxxxxxxxxxxxxxxx" )
+        # exit()
 
 if 'securitytrails' in t_sources:
     try:
         SECURITY_TRAILS_API_KEY = os.environ['SECURITY_TRAILS_API_KEY']
     except Exception as e:
-        print( "Error: %s not defined" % e )
-        print( "To fix this:" )
-        print( "export SECURITY_TRAILS_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxx" )
-        exit()
+        t_sources.remove('securitytrails')
+        print( colored("[-] error occured: SECURITY_TRAILS_API_KEY not found, SecurityTrails removed from sources", 'red') )
+        # print( "Error: %s not defined" % e )
+        # print( "To fix this:" )
+        # print( "export SECURITY_TRAILS_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxx" )
+        # exit()
 
 # https://stackoverflow.com/questions/5619685/conversion-from-ip-string-to-integer-and-backward-in-python
 def IP2Int(ip):
