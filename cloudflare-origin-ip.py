@@ -111,7 +111,7 @@ t_exclude_headers = [
 
 parser = argparse.ArgumentParser( formatter_class=argparse.RawDescriptionHelpFormatter, epilog=textwrap.dedent('''Examples:
 cloudflare-origin-ip.py -u https://xxx.xxxxxxxxxxxx.xxx
-cloudflare-origin-ip.py -u https://xxx.xxxxxxxxxxxx.xxx -s censys,crtsh (default)
+cloudflare-origin-ip.py -u https://xxx.xxxxxxxxxxxx.xxx -s censys,crtsh,securitytrails (default)
 cloudflare-origin-ip.py -u https://xxx.xxxxxxxxxxxx.xxx -s /home/local/ips.txt
 cloudflare-origin-ip.py -u https://xxx.xxxxxxxxxxxx.xxx -s censys,crtsh,/home/local/ips.txt,/home/local/subdomains.txt
 
@@ -130,10 +130,9 @@ else:
 if args.source:
     t_sources = args.source.split( ',' )
 else:
-    t_sources = [ 'censys', 'crtsh' ]
+    t_sources = [ 'censys', 'crtsh', 'securitytrails' ]
 
 if 'censys' in t_sources:
-    CENSYS_API_URL = 'https://search.censys.io/api'
     try:
         CENSYS_UID = os.environ['CENSYS_UID']
         CENSYS_SECRET = os.environ['CENSYS_SECRET']
@@ -142,6 +141,15 @@ if 'censys' in t_sources:
         print( "To fix this:" )
         print( "export CENSYS_UID=xxxxxxxxxxxxxxxxxxxxxxxxxx" )
         print( "export CENSYS_SECRET=xxxxxxxxxxxxxxxxxxxxxxx" )
+        exit()
+
+if 'securitytrails' in t_sources:
+    try:
+        SECURITY_TRAILS_API_KEY = os.environ['SECURITY_TRAILS_API_KEY']
+    except Exception as e:
+        print( "Error: %s not defined" % e )
+        print( "To fix this:" )
+        print( "export SECURITY_TRAILS_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxx" )
         exit()
 
 # https://stackoverflow.com/questions/5619685/conversion-from-ip-string-to-integer-and-backward-in-python
@@ -179,50 +187,131 @@ def levenshtein(s, t):
         return v1[len(t)]
 
 
-def grabSubs( domain ):
-    print( "[+] Grabbing subdomains from crt.sh: %s" % domain )
+def grabber_crtsh( domain ):
+    global t_subs, t_ips
+    print( "[+] Grab data from crt.sh: %s" % domain )
+
+    n_subs = 0
+    n_ips = 0
     url = 'https://crt.sh/?q=%25.' + domain + '&output=json'
+
     try:
         ex = 0
         r = requests.get( url )
     except Exception as e:
         ex = 1
         print( colored("[-] error occured: %s" % e, 'red') )
+
     if ex == 0 and r.status_code == 200:
-        n = 0
         j = r.json()
         for item in j:
             parse = tldextract.extract( item['name_value'] )
             sub = item['name_value'].replace( '*.', '' )
             if sub != domain and not sub in t_subs:
+                n_subs = n_subs + 1
                 t_subs.append( sub )
                 try:
                     ex = 0
                     data = socket.gethostbyname( sub )
                     if not data in t_ips:
-                        n = n + 1
+                        n_ips = n_ips + 1
                         t_ips.append( data )
                 except Exception as e:
                     ex = 1
-        print( colored("[+] %d subdomains found, %d ips added" % (len(t_subs),n), 'green') )
+
+    print( colored("[+] %d subdomains found, %d ips added" % (n_subs,n_ips), 'green') )
 
 
-def grabIPfromCensys( domain ):
-    print( "[+] Grabbing ips from Censys: %s" % domain )
+def grabber_censys( domain ):
+    global t_subs, t_ips
+    print( "[+] Grab data from Censys: %s" % domain )
+
+    n_ips = 0
     query = {"query":domain}
     headers = {"Content-Type":"application/json"}
+
     try:
         ex = 0
-        r = requests.get( CENSYS_API_URL+'/v2/hosts/search?q='+domain, headers=headers, auth=(CENSYS_UID,CENSYS_SECRET) )
+        r = requests.get( 'https://search.censys.io/api/v2/hosts/search?q='+domain, headers=headers, auth=(CENSYS_UID,CENSYS_SECRET) )
     except Exception as e:
         ex = 1
         print( colored("[-] error occurred: %s" % e, 'red') )
+
     if ex == 0 and r.status_code == 200:
         j = r.json()
-        print( colored("[+] %d ips added" % len(j['result']), 'green') )
         if int(j['code']) == 200 and j['status'] == 'OK' and type(j['result']) is dict and len(j['result'])>0 and type(j['result']['hits']) is list and len(j['result']['hits'])>0:
             for i in j['result']['hits']:
+                n_ips = n_ips + 1
                 t_ips.append( i['ip'] )
+
+    print( colored("[+] %d ips added" % (n_ips), 'green') )
+
+
+def grabber_securitytrails( domain ):
+    global t_subs, t_ips
+    print( "[+] Grab data from SecurityTrails: %s" % domain )
+
+    n_subs = 0
+    n_ips = 0
+    headers = {"apikey":SECURITY_TRAILS_API_KEY}
+
+    try:
+        ex = 0
+        r = requests.get( 'https://api.securitytrails.com/v1/domain/'+domain, headers=headers )
+    except Exception as e:
+        ex = 1
+        print( colored("[-] error occurred: %s" % e, 'red') )
+
+    if ex == 0 and r.status_code == 200:
+        j = r.json()
+        # print(j)
+        if 'apex_domain' in j and j['apex_domain'] == domain and 'current_dns' in j:
+            if 'a' in j['current_dns']:
+                for value in j['current_dns']['a']['values']:
+                    if not ip in t_ips:
+                        n_ips = n_ips + 1
+                        t_ips.append( value['ip'] )
+            if 'aaaa' in j['current_dns']:
+                for value in j['current_dns']['aaaa']['values']:
+                    if not ip in t_ips:
+                        n_ips = n_ips + 1
+                        t_ips.append( value['ipv6'] )
+            if 'mx' in j['current_dns']:
+                for value in j['current_dns']['mx']['values']:
+                    try:
+                        data = socket.gethostbyname( value['hostname'] )
+                        if not data in t_ips:
+                            n_ips = n_ips + 1
+                            t_ips.append( data )
+                    except Exception as e:
+                        pass
+
+    try:
+        ex = 0
+        r = requests.get( 'https://api.securitytrails.com/v1/domain/'+domain+'/subdomains', headers=headers )
+    except Exception as e:
+        ex = 1
+        print( colored("[-] error occurred: %s" % e, 'red') )
+
+    if ex == 0 and r.status_code == 200:
+        j = r.json()
+        # print(j)
+        if 'subdomain_count' in j and j['subdomain_count'] > 0 and 'subdomains' in j:
+            for prefix in j['subdomains']:
+                sub = prefix + '.' + domain
+                if not sub in t_subs:
+                    n_subs = n_subs + 1
+                    t_subs.append( sub )
+                    try:
+                        data = socket.gethostbyname( sub )
+                        if not data in t_ips:
+                            n_ips = n_ips + 1
+                            t_ips.append( data )
+                    except Exception as e:
+                        pass
+
+    print( colored("[+] %d subdomains found, %d ips added" % (n_subs,n_ips), 'green') )
+
 
 def readIPfromFile( domain, ipsrc ):
     print( "[+] Reading datas from file: %s" % ipsrc )
@@ -437,17 +526,20 @@ t_ips = []
 t_subs = []
 
 for s in t_sources:
-    if s != 'crtsh' and s!= 'censys':
+    if s != 'crtsh' and s != 'censys' and s != 'securitytrails':
         if not os.path.isfile( s ):
             print( colored("[-] source file not found: %s" % s, 'red') )
         else:
             readIPfromFile( domain, s )
 
 if 'crtsh' in t_sources:
-    grabSubs( domain )
+    grabber_crtsh( domain )
 
 if 'censys' in t_sources:
-    grabIPfromCensys( domain )
+    grabber_censys( domain )
+
+if 'securitytrails' in t_sources:
+    grabber_securitytrails( domain )
 
 t_ips = set( t_ips )
 t_ips_cloudflare = []
