@@ -270,17 +270,17 @@ def grabber_securitytrails( domain ):
         j = r.json()
         # print(j)
         if 'apex_domain' in j and j['apex_domain'] == domain and 'current_dns' in j:
-            if 'a' in j['current_dns']:
+            if 'a' in j['current_dns'] and 'values' in j['current_dns']['a']:
                 for value in j['current_dns']['a']['values']:
                     if not ip in t_ips:
                         n_ips = n_ips + 1
                         t_ips.append( value['ip'] )
-            if 'aaaa' in j['current_dns']:
+            if 'aaaa' in j['current_dns'] and 'values' in j['current_dns']['aaaa']:
                 for value in j['current_dns']['aaaa']['values']:
                     if not ip in t_ips:
                         n_ips = n_ips + 1
                         t_ips.append( value['ipv6'] )
-            if 'mx' in j['current_dns']:
+            if 'mx' in j['current_dns'] and 'values' in j['current_dns']['mx']:
                 for value in j['current_dns']['mx']['values']:
                     try:
                         data = socket.gethostbyname( value['hostname'] )
