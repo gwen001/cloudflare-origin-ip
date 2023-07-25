@@ -9,6 +9,7 @@ import socket
 import argparse
 import threading
 import time
+import ipaddress
 import textwrap
 from functools import partial
 # from urlparse import urlparse
@@ -243,12 +244,27 @@ def readIPfromFile( domain, ipsrc ):
 #             return 1
 #     return 0
 
+
+# def is_cloudflare3( ip ):
+#     ip = IP2Int( str(ip) )
+#     for r in r_cloudflare2:
+#         if ip >= r[0] and ip <= r[1]:
+#             return 1
+#     return 0
+
+# https://github.com/gwen001/cloudflare-origin-ip/pull/8
 def is_cloudflare3( ip ):
-    ip = IP2Int( str(ip) )
-    for r in r_cloudflare2:
-        if ip >= r[0] and ip <= r[1]:
-            return 1
-    return 0
+    try:
+        ip_obj = ipaddress.ip_address(ip)
+    except ValueError:
+        # Handle the case when the IP address is not valid
+        return False
+
+    for r in r_cloudflare:
+        if ip_obj in ipaddress.ip_network(r):
+            return True
+
+    return False
 
 
 # def testBypass( r_reference, ip, host ):
@@ -452,8 +468,6 @@ pool.map( partial(testBypass3,t_multiproc,r_reference,host), t_ips )
 pool.close()
 pool.join()
 
-exit()
-exit()
 exit()
 
 
