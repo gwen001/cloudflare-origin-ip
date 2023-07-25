@@ -189,7 +189,7 @@ def levenshtein(s, t):
 
 def grabber_crtsh( domain ):
     global t_subs, t_ips
-    print( "[+] Grab data from crt.sh: %s" % domain )
+    print( "[+] Grab data from crt.sh" )
 
     n_subs = 0
     n_ips = 0
@@ -224,7 +224,7 @@ def grabber_crtsh( domain ):
 
 def grabber_censys( domain ):
     global t_subs, t_ips
-    print( "[+] Grab data from Censys: %s" % domain )
+    print( "[+] Grab data from Censys" )
 
     n_ips = 0
     query = {"query":domain}
@@ -249,7 +249,7 @@ def grabber_censys( domain ):
 
 def grabber_securitytrails( domain ):
     global t_subs, t_ips
-    print( "[+] Grab data from SecurityTrails: %s" % domain )
+    print( "[+] Grab data from SecurityTrails" )
 
     n_subs = 0
     n_ips = 0
