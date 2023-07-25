@@ -253,7 +253,7 @@ def readIPfromFile( domain, ipsrc ):
 #     return 0
 
 # https://github.com/gwen001/cloudflare-origin-ip/pull/8
-def is_cloudflare3( ip ):
+def is_cloudflare4( ip ):
     try:
         ip_obj = ipaddress.ip_address(ip)
     except ValueError:
@@ -326,7 +326,7 @@ def testBypass3( t_multiproc, r_reference, host, ip ):
     sys.stdout.write( 'progress: %d/%d\r' %  (t_multiproc['n_current'],t_multiproc['n_total']) )
     t_multiproc['n_current'] = t_multiproc['n_current'] + 1
 
-    if is_cloudflare3( IPAddress(ip) ):
+    if is_cloudflare4( IPAddress(ip) ):
         sys.stdout.write( colored("%s" % ip, 'yellow') )
         sys.stdout.write( " is CloudFlare\n" )
         return
