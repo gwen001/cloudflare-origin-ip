@@ -57,10 +57,12 @@ MAX_THREADS = 10
 # COEF_CONTENT_TYPE = 1.3
 
 r_cloudflare = [
+    # ipv4
     '103.21.244.0/22',
     '103.22.200.0/22',
     '103.31.4.0/22',
-    '104.16.0.0/12',
+    '104.16.0.0/13',
+    '104.24.0.0/14',
     '108.162.192.0/18',
     '131.0.72.0/22',
     '141.101.64.0/18',
@@ -70,13 +72,23 @@ r_cloudflare = [
     '188.114.96.0/20',
     '190.93.240.0/20',
     '197.234.240.0/22',
-    '198.41.128.0/17'
+    '198.41.128.0/17',
+    # ipv6
+    '2400:cb00::/32',
+    '2606:4700::/32',
+    '2803:f800::/32',
+    '2405:b500::/32',
+    '2405:8100::/32',
+    '2a06:98c0::/29',
+    '2c0f:f248::/32',
 ]
-r_cloudflare2 = [
+r_cloudflare_i = [
+    # ipv4
     [1729491968,1729492991],
     [1729546240,1729547263],
     [1730085888,1730086911],
-    [1745879040,1746927615],
+    [1745879040,1746403327],
+    [1746403328,1746665471],
     [1822605312,1822621695],
     [2197833728,2197834751],
     [2372222976,2372239359],
@@ -86,7 +98,11 @@ r_cloudflare2 = [
     [3161612288,3161616383],
     [3193827328,3193831423],
     [3320508416,3320509439],
-    [3324608512,3324641279]
+    [3324608512,3324641279],
+    # ipv6 ?
+]
+
+r_cloudflare6 = [
 ]
 
 t_exclude_headers = [
@@ -239,7 +255,7 @@ def readIPfromFile( domain, ipsrc ):
 
 # def is_cloudflare2( ip ):
 #     ip = IP2Int( str(ip) )
-#     for r in r_cloudflare2:
+#     for r in r_cloudflare_i:
 #         if ip >= r[0] and ip <= r[1]:
 #             return 1
 #     return 0
@@ -247,17 +263,19 @@ def readIPfromFile( domain, ipsrc ):
 
 # def is_cloudflare3( ip ):
 #     ip = IP2Int( str(ip) )
-#     for r in r_cloudflare2:
+#     for r in r_cloudflare_i:
 #         if ip >= r[0] and ip <= r[1]:
 #             return 1
 #     return 0
 
 # https://github.com/gwen001/cloudflare-origin-ip/pull/8
 def is_cloudflare4( ip ):
+    # print(ip)
     try:
         ip_obj = ipaddress.ip_address(ip)
     except ValueError:
         # Handle the case when the IP address is not valid
+        print( colored("[-] %s: ValueError" % (ip), 'red') )
         return False
 
     for r in r_cloudflare:
@@ -414,6 +432,7 @@ if len(t_host_parse.subdomain):
 # print( t_url_parse )
 # print( t_host_parse )
 
+
 t_ips = []
 t_subs = []
 
@@ -442,6 +461,7 @@ print( "[+] %d unique ips collected" % len(t_ips) )
 if len(t_ips) == 0:
     exit()
 
+
 print( "[+] Performing reference request..." )
 try:
     r_reference = requests.get( url, timeout=3, verify=False, headers=t_headers )
@@ -453,7 +473,6 @@ except Exception as e:
 
 print( colored("Status=%d, Length=%d, Headers=%d, Content-Type=%s" % (r_reference.status_code,len(r_reference.content),len(r_reference.headers),r_reference.headers['Content-Type']), 'cyan') )
 print( "[+] Testing bypass..." )
-
 
 
 ###################################### VERSION 3 ######################################
