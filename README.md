@@ -65,11 +65,11 @@ cloudflare-origin-ip.py -u https://xxx.xxxxxxxxxxxx.xxx -s censys,crtsh,/home/lo
 - securitytrails
 - local file
 
-3/ Performs a HTTP request to all IPs grabbed with the header `Host` setted to the subdomain of the reference request
+3/ Performs a HTTP request to all IPs grabbed with the header `Host` setted to the subdomain of the reference request.
 
-4/ Compares the responses obtained with the response of the reference request using the `Levenshtein` algorithm
+4/ Compares the responses obtained with the response of the reference request using the `Levenshtein` algorithm.
 
-5/ Displays a score of similarity
+5/ Displays a score of similarity.
 
 ---
 
