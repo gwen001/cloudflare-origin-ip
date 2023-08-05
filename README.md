@@ -55,6 +55,34 @@ cloudflare-origin-ip.py -u https://xxx.xxxxxxxxxxxx.xxx -s /home/local/ips.txt
 cloudflare-origin-ip.py -u https://xxx.xxxxxxxxxxxx.xxx -s censys,crtsh,/home/local/ips.txt,/home/local/subdomains.txt
 ```
 
+
+
+## Sources
+
+Implemented sources are:
+
+- censys
+- crtsh
+- securitytrails
+- locall file
+
+
+## How it works
+
+1/ Performs a HTTP request to the URL provided, this is the reference request.
+
+2/ Grabs IPs using several sources:
+- censys
+- crtsh
+- securitytrails
+- local file
+
+3/ Performs a HTTP request to all IPs grabbed with the header `Host` setted to the subdomain of the reference request
+
+4/ Compares the responses obtained with the response of the reference request using the `Levenshtein` algorithm
+
+5/ Displays a score of similarity
+
 ---
 
 <img src="https://raw.githubusercontent.com/gwen001/cloudflare-origin-ip/main/preview.png" />
