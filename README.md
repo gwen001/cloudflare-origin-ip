@@ -46,7 +46,7 @@ options:
   -h, --help            show this help message and exit
   -u URL, --url URL     url to test
   -s SOURCE, --source SOURCE
-                        datas sources separated by coma, can be: censys,crtsh,local file
+                        datas sources separated by coma, can be: censys,crtsh,securitytrails,local file
 
 Examples:
 cloudflare-origin-ip.py -u https://xxx.xxxxxxxxxxxx.xxx
