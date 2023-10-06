@@ -492,7 +492,7 @@ def responseCompare( r_reference, r ):
         else:
             score['dist_content'] = 100
             # score['dist_content'] = r.content
-    else
+    else:
         dist = levenshtein( r.content[0:COMPARE_FIRST_CHARS], r_reference.content[0:COMPARE_FIRST_CHARS] )
         score['dist_content'] = 100 - ( dist*100 / len(r_reference.content[0:COMPARE_FIRST_CHARS]) )
         # score['content_dist'] = dist
