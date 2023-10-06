@@ -483,19 +483,25 @@ def responseCompare( r_reference, r ):
         score['status_code'] = 'NOK'
         score['dist_status_code'] = 0
 
-    dist = levenshtein( r.headers['Content-Type'], r_reference.headers['Content-Type'] )
-    score['dist_content_type'] = 100 - ( dist*100 / len(r_reference.headers['Content-Type']) )
-
-    if len(r_reference.content) == 0:
-        if len(r.content) == 0:
-            score['dist_content'] = 0
-        else:
-            score['dist_content'] = 100
-            # score['dist_content'] = r.content
+    if len(r.headers['Content-Type']) > 0 and len(r_reference.headers['Content-Type']) > 0:
+        dist = levenshtein( r.headers['Content-Type'], r_reference.headers['Content-Type'] )
+        score['dist_content_type'] = 100 - ( dist*100 / len(r_reference.headers['Content-Type']) )
     else:
+        if len(r.headers['Content-Type']) == 0 and len(r_reference.headers['Content-Type']) == 0:
+            score['dist_content_type'] = 100
+        else:
+            score['dist_content_type'] = 0
+
+    if len(r.content) > 0 and len(r_reference.content) > 0:
         dist = levenshtein( r.content[0:COMPARE_FIRST_CHARS], r_reference.content[0:COMPARE_FIRST_CHARS] )
         score['dist_content'] = 100 - ( dist*100 / len(r_reference.content[0:COMPARE_FIRST_CHARS]) )
-        # score['content_dist'] = dist
+    else:
+        if len(r.content) == 0 and len(r_reference.content) == 0:
+            score['dist_content'] = 100
+        else:
+            score['dist_content'] = 100 / (len(r.content)+len(r_reference.content))
+    if score['dist_content'] < 0:
+        score['dist_content'] = 0
 
     s_headers = ''
     s_reference_headers = ''
