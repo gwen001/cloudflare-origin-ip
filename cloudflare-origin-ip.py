@@ -486,9 +486,16 @@ def responseCompare( r_reference, r ):
     dist = levenshtein( r.headers['Content-Type'], r_reference.headers['Content-Type'] )
     score['dist_content_type'] = 100 - ( dist*100 / len(r_reference.headers['Content-Type']) )
 
-    dist = levenshtein( r.content[0:COMPARE_FIRST_CHARS], r_reference.content[0:COMPARE_FIRST_CHARS] )
-    score['dist_content'] = 100 - ( dist*100 / len(r_reference.content[0:COMPARE_FIRST_CHARS]) )
-    # score['content_dist'] = dist
+    if len(r_reference.content) == 0:
+        if len(r.content) == 0:
+            score['dist_content'] = 0
+        else:
+            score['dist_content'] = 100
+            # score['dist_content'] = r.content
+    else
+        dist = levenshtein( r.content[0:COMPARE_FIRST_CHARS], r_reference.content[0:COMPARE_FIRST_CHARS] )
+        score['dist_content'] = 100 - ( dist*100 / len(r_reference.content[0:COMPARE_FIRST_CHARS]) )
+        # score['content_dist'] = dist
 
     s_headers = ''
     s_reference_headers = ''
