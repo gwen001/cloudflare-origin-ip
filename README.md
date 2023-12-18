@@ -64,9 +64,9 @@ cloudflare-origin-ip.py -u https://xxx.xxxxxxxxxxxx.xxx -s censys,crtsh,/home/lo
 1/ Performs a HTTP request to the URL provided, this is the reference request.
 
 2/ Grabs IPs using several sources:
-- censys
+- censys (key required)
 - crtsh
-- securitytrails
+- securitytrails (key required)
 - local file
 
 3/ Performs a HTTP request to all IPs grabbed with the header `Host` setted to the subdomain of the reference request.
