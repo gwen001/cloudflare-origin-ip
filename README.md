@@ -33,6 +33,10 @@ cd cloudflare-origin-ip
 pip3 install -r requirements.txt
 ```
 
+Depending the sources you want to use, you'll need to create environment variables:
+- Censys: `CENSYS_UID` and `CENSYS_SECRET`
+- SecurityTrails: `SECURITY_TRAILS_API_KEY`
+
 ## Usage
 
 ```
