@@ -272,11 +272,13 @@ def grabber_securitytrails( domain ):
         if 'apex_domain' in j and j['apex_domain'] == domain and 'current_dns' in j:
             if 'a' in j['current_dns'] and 'values' in j['current_dns']['a']:
                 for value in j['current_dns']['a']['values']:
+                    ip = value['ip']
                     if not ip in t_ips:
                         n_ips = n_ips + 1
                         t_ips.append( value['ip'] )
             if 'aaaa' in j['current_dns'] and 'values' in j['current_dns']['aaaa']:
                 for value in j['current_dns']['aaaa']['values']:
+                    ip = value['ipv6']
                     if not ip in t_ips:
                         n_ips = n_ips + 1
                         t_ips.append( value['ipv6'] )
